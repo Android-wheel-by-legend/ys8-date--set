@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="mian_item_bottom">16dp</dimen>
+    <dimen name="main_default_space">16dp</dimen>
+    <dimen name="main_item_top">12dp</dimen>
+    <dimen name="radius_space">5dp</dimen>
+</resources>
