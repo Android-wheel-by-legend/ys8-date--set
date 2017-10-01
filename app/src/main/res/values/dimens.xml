@@ -4,4 +4,5 @@
     <dimen name="main_default_space">16dp</dimen>
     <dimen name="main_item_top">12dp</dimen>
     <dimen name="radius_space">5dp</dimen>
+    <dimen name="toolbar_padding_top">25dp</dimen>
 </resources>

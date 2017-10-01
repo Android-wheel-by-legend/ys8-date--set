@@ -39,17 +39,12 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder>{
 
         final ViewHolder viewHolder=new ViewHolder(view);
 
-//        viewHolder.view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//
-////                Toast.makeText(YsApplication.getContext(),viewHolder.main_item_text.getText().toString(),Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
-        viewHolder.view.setOnClickListener(event->
-                EventBus.getDefault().post(new MainEvent(viewHolder.main_item_text.getText().toString())));
+        viewHolder.view.setOnClickListener(event-> {
+                EventBus.getDefault().post(new MainEvent(viewHolder.main_item_text.getText().toString()));
+        }
+
+        );
 
         return viewHolder;
     }

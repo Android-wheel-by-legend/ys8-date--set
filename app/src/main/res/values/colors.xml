@@ -5,4 +5,22 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlue">#35b8ff</color>
 
+    <color name="colorOrange">#e97508</color>
+    <color name="colorPurple">#6d02ab</color>
+
+    <color name="colorMi">#b6ab92</color>
+
+    <color name="colorYellow">#ffd000</color>
+
+    <color name="colorPink">#ff80ab</color>
+    <color name="colorRed">#ffb78a</color>
+
+
+    <color name="colorLightBlue">#03A9F4</color>
+
+    <color name="colorCP">#00c4ff</color>
+
+    <color name="colorSliver">#dbe1db</color>
+    <color name="colorWhite">#FFFFFF</color>
+
 </resources>

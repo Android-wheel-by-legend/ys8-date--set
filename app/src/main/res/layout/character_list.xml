@@ -4,27 +4,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     app:cardCornerRadius="@dimen/radius_space"
     android:layout_marginRight="@dimen/main_default_space"
     android:layout_marginLeft="@dimen/main_default_space"
+    android:background="?android:attr/selectableItemBackground"
     >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:id="@+id/character_album"
+            android:scaleType="centerCrop"
             />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="250dp"
+            android:layout_height="48dp"
             android:text="亚特鲁 克里斯汀"
             android:gravity="center"
             android:id="@+id/character_name"
+
             />
+
+        </LinearLayout>
 
 
 

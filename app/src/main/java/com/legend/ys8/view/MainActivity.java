@@ -135,7 +135,6 @@ public class MainActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-
     public void mainEvent(MainEvent mainEvent){
         String item=mainEvent.getItem();
         switch (item){
@@ -144,55 +143,13 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case "音乐":
-                getMusic();
+
                 break;
 
 
         }
     }
 
-
-    private void getMusic(){
-        Request.Builder builder=new Request.Builder().url("https://api.imjad.cn/cloudmusic/?type=song&id=426881983&br=320000");
-
-//        RequestBody formBody=new FormBody.Builder().add("type","song").add("id","426881983").build();
-//
-//        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://api.imjad.cn/cloudmusic").newBuilder();
-//        urlBuilder.addQueryParameter("type", "song");
-//        urlBuilder.addQueryParameter("id","426881983");
-//        builder.url(urlBuilder.build());
-
-
-        builder.method("GET",null);
-
-        Request request=builder.build();
-
-        OkHttpClient okHttpClient=new OkHttpClient();
-
-        Call call=okHttpClient.newCall(request);
-
-
-        System.out.println(request);
-
-
-
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("false------"+call);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String title=response.body().string();
-                System.out.println("call is "+call);
-
-                System.out.println(title);
-            }
-        });
-
-    }
 
 
 }

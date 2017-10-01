@@ -11,6 +11,10 @@
     <style name="Ys8Theme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
 
+        <item name="android:windowTranslucentStatus"> true </item>
+
+
+
 
     </style>
 </resources>

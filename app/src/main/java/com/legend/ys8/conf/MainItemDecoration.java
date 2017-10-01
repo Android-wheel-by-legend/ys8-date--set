@@ -26,9 +26,7 @@ public class MainItemDecoration extends RecyclerView.ItemDecoration{
         int bottom=view.getResources().getDimensionPixelSize(R.dimen.mian_item_bottom);
         int top=view.getResources().getDimensionPixelSize(R.dimen.main_item_top);
 
-        System.out.println("default is "+default_space);
 
-        System.out.println("bottom is "+bottom);
 
         if (parent.getChildAdapterPosition(view)==0){
             outRect.top=top;
