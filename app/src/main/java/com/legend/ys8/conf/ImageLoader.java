@@ -391,25 +391,24 @@ public class ImageLoader{
 
         String file_path=file+"/"+name;
 
-        BitmapFactory.Options options=new BitmapFactory.Options();
-
-        options.inSampleSize=2;
-        options.inPreferredConfig= Bitmap.Config.RGB_565;
 
 
-        bitmap=BitmapFactory.decodeFile(file_path,options);
+//        options.inSampleSize=2;
+//        options.inPreferredConfig= Bitmap.Config.RGB_565;
+//
+//
+//        bitmap=BitmapFactory.decodeFile(file_path,options);
 
 
-//        try {
+        try {
 //            FileInputStream fileInputStream=new FileInputStream(file);
 //            bitmap=BitmapFactory.decodeStream(fileInputStream);
-//
-//
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//
-//
-//        }finally {
+            bitmap=BitmapFactory.decodeFile(file_path);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
             if (null!=bitmap) {
                 bitmap=Bitmap.createScaledBitmap(bitmap,reqWidth,reqHeight,false);
 
@@ -417,7 +416,7 @@ public class ImageLoader{
             }
 
             return bitmap;
-//        }
+        }
 
         //还需要进行内存缓存
 
