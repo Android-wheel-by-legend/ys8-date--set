@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -25,6 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.reactivex.functions.Consumer;
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,6 +51,9 @@ public class ImageLoader{
     private static ImageLoader imageLoader;
 
     private final String CACHE_PATH= String.valueOf(YsApplication.getContext().getFilesDir());//文件缓存
+
+
+    private RecyclerView recyclerView;
 
     public ImageLoader() {
         int maxMemory= (int) (Runtime.getRuntime().maxMemory()/1024);
@@ -94,6 +99,14 @@ public class ImageLoader{
 
         bindImage(url, imageView,reqWidth,reqHeight);
 
+    }
+
+
+
+    boolean isScroll=false;
+
+    public void setScroll(boolean scroll) {
+        isScroll = scroll;
     }
 
     //清除缓存
@@ -142,9 +155,20 @@ public class ImageLoader{
             inputStream=response.body().byteStream();
 
 
+
 //            bitmap=writeToDisk(inputStream,url,reqWidth,reqHeight);
 
-            bitmap=BitmapFactory.decodeStream(inputStream);
+            BitmapFactory.Options options=new BitmapFactory.Options();
+
+            options.inPreferredConfig= Bitmap.Config.RGB_565;
+
+
+            options.inSampleSize=2;
+
+            bitmap=BitmapFactory.decodeStream(inputStream,null,options);
+
+
+            Log.d("internetSize--------->",bitmap.getByteCount()+"");
 
 
         } catch (IOException e) {
@@ -272,6 +296,12 @@ public class ImageLoader{
 
 
 
+
+
+        Log.d("isScroll",isScroll+"");
+
+
+
         //先查找内存缓存以及本地缓存，如果有则设置并返回，没有则开启网络查找
         Bitmap bitmap=null;
 
@@ -283,13 +313,21 @@ public class ImageLoader{
             return;
         }
 
+        if (isScroll){
+            return;
+        }
+
         bitmap=getBitmapFromDisk(url,reqWidth,reqHeight);
 
         if (null!=bitmap){
 
+            Log.d("size------->",(bitmap.getByteCount())+"");
+
             imageView.setImageBitmap(bitmap);
             return;
         }
+
+
 
 
 
@@ -312,7 +350,7 @@ public class ImageLoader{
     }
 
     /**
-     * 本地缓存  本方法作废
+     * 本地缓存
      * @param bitmap
      * @param url MD5加密命名
      */
@@ -320,7 +358,11 @@ public class ImageLoader{
         String name=getMd5(url);
 
         try {
+
+
             File file=new File(CACHE_PATH,name);
+
+
 
             File parentFile=file.getParentFile();
 
@@ -328,7 +370,7 @@ public class ImageLoader{
                 parentFile.mkdirs();
             }
 
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,new FileOutputStream(file));
+            bitmap.compress(Bitmap.CompressFormat.WEBP,100,new FileOutputStream(file));
 
         }catch (FileNotFoundException e){
             e.printStackTrace();
@@ -349,7 +391,13 @@ public class ImageLoader{
 
         String file_path=file+"/"+name;
 
-        bitmap=BitmapFactory.decodeFile(file_path);
+        BitmapFactory.Options options=new BitmapFactory.Options();
+
+        options.inSampleSize=2;
+        options.inPreferredConfig= Bitmap.Config.RGB_565;
+
+
+        bitmap=BitmapFactory.decodeFile(file_path,options);
 
 
 //        try {
@@ -487,7 +535,7 @@ public class ImageLoader{
 
 
 
-        if (height>reqHeight||width>reqWidth){
+        if (height>reqHeight/2||width>reqWidth/2){
             int halfHeight=height/2;
 
             int halfWidth=width/2;

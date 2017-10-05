@@ -61,19 +61,28 @@ public class CharacterAdapter extends BaseAdapter<CharacterAdapter.ViewHolder>{
     public void setRecyclerView(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
 
-
-
+//        imageLoader.setRecyclerView(recyclerView);
 
         this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 //                super.onScrollStateChanged(recyclerView, newState);
-
-                status=newState;
+                switch (newState){
+                    case 0:
+                        imageLoader.setScroll(false);
+                        notifyDataSetChanged();
+                        break;
+                    case 1:
+                        imageLoader.setScroll(false);
+                        break;
+                    case 2:
+                        imageLoader.setScroll(true);
+                        break;
+                }
 
 
 //                if (newState==0) {
-//                    RxBus.getDefault().post(newState);
+
 //                }
 
 //                observable=Observable
@@ -148,13 +157,11 @@ public class CharacterAdapter extends BaseAdapter<CharacterAdapter.ViewHolder>{
 
         holder.imageView.setImageResource(R.drawable.default_bg);
 
-        Log.d("starus----->",status+"");
-
-        if (status == -1||status==0||status==1) {
-            imageLoader.setImage(character.getBook_url(),holder.imageView,width,height);
-        }
-
-
+//        Log.d("starus1111111----->",status+"");
+//
+//
+//
+//
 //        RxBus
 //                .getDefault()
 //                .tObservable(Integer.class)
@@ -162,6 +169,20 @@ public class CharacterAdapter extends BaseAdapter<CharacterAdapter.ViewHolder>{
 //                .subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe(new Consumer<Integer>() {
+//
+//
+//                    @Override
+//                    public void accept(Integer integer) throws Exception {
+//                        status=integer.intValue();
+//                    }
+//                });
+//
+//
+//        Log.d("status2222222------>",""+status);
+
+//        if (status == -1||status==0||status==1) {
+            imageLoader.setImage(character.getBook_url(),holder.imageView,width,height);
+//        }
 //
 //            @Override
 //            public void accept(Integer integer) throws Exception {
