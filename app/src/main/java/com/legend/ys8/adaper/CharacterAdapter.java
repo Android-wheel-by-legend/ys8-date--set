@@ -156,6 +156,7 @@ public class CharacterAdapter extends BaseAdapter<CharacterAdapter.ViewHolder>{
 
 
         holder.imageView.setImageResource(R.drawable.default_bg);
+        holder.imageView.setTag(character.getBook_url());
 
 //        Log.d("starus1111111----->",status+"");
 //

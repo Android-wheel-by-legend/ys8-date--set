@@ -26,7 +26,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -102,13 +107,6 @@ public class ImageLoader{
     }
 
 
-
-    boolean isScroll=false;
-
-    public void setScroll(boolean scroll) {
-        isScroll = scroll;
-    }
-
     //清除缓存
     public void clean(){
         lruCache.evictAll();
@@ -130,7 +128,7 @@ public class ImageLoader{
      * @param url
      * @return
      */
-    private Bitmap getBitmap(String url,int reqWidth,int reqHeight){
+    private Bitmap getBitmapFromNet(String url,int reqWidth,int reqHeight){
 
 
         Request.Builder builder1=new Request.Builder().url(url).method("GET",null);
@@ -295,57 +293,92 @@ public class ImageLoader{
     private void bindImage(String url,ImageView imageView,int reqWidth,int reqHeight){
 
 
-
-
-
-        Log.d("isScroll",isScroll+"");
-
-
-
         //先查找内存缓存以及本地缓存，如果有则设置并返回，没有则开启网络查找
-        Bitmap bitmap=null;
 
-        bitmap=getBitmapFromMemory(url,reqWidth,reqHeight);
 
-        if (null!=bitmap){
+        Observable.create(new ObservableOnSubscribe<Bitmap>() {
+            @Override
+            public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
 
-            imageView.setImageBitmap(bitmap);
-            return;
-        }
+                Bitmap bitmap=null;
 
-//        if (isScroll){
+                bitmap=getBitmapFromMemory(url,reqWidth,reqHeight);
+
+                if (bitmap==null){
+                    bitmap=getBitmapFromDisk(url,reqWidth,reqHeight);
+
+//                    Log.d("info1-------------->",bitmap.getByteCount()+"");
+                }
+
+                if (bitmap==null){
+
+//                    Log.d("info2-------->","it is null!");
+                    bitmap=getBitmapFromNet(url,reqWidth,reqHeight);
+
+                    if (bitmap!=null){
+                        cacheInMemory(bitmap,url);
+                        cacheImageInDisk(bitmap,url);
+                    }
+                }
+
+                e.onNext(bitmap);
+
+
+            }})
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Bitmap>() {
+                    @Override
+                    public void accept(Bitmap bitmap) throws Exception {
+
+                        if (null!=bitmap&&imageView.getTag().equals(url)){
+                           imageView.setImageBitmap(bitmap);
+                        }
+                    }
+                });
+
+
+//        bitmap=getBitmapFromMemory(url,reqWidth,reqHeight);
+//
+//        if (null!=bitmap&&imageView.getTag().equals(url)){
+//
+//            imageView.setImageBitmap(bitmap);
 //            return;
 //        }
-
-        bitmap=getBitmapFromDisk(url,reqWidth,reqHeight);
-
-        if (null!=bitmap){
-
-            Log.d("size------->",(bitmap.getByteCount())+"");
-
-            imageView.setImageBitmap(bitmap);
-            return;
-        }
-
-
-
-
-
-        Runnable runnable=new Runnable() {
-            @Override
-            public void run() {
-                Bitmap bitmap=getBitmap(url,reqWidth,reqHeight);
-
-                if (null!=bitmap){
-
-                    LoaderResult loaderResult=new LoaderResult(imageView,bitmap,url,reqWidth,reqHeight);
-                    handler.obtainMessage(1,loaderResult).sendToTarget();
-
-                }
-            }
-        };
-
-        ThreadPool.execute(runnable);//放入线程池
+//
+////        if (isScroll){
+////            return;
+////        }
+//
+//        bitmap=getBitmapFromDisk(url,reqWidth,reqHeight);
+//
+//        if (null!=bitmap&&imageView.getTag().equals(url)){
+//
+//            Log.d("size------->",(bitmap.getByteCount())+"");
+//
+//            imageView.setImageBitmap(bitmap);
+//            return;
+//        }
+//
+//
+//
+//
+//
+//        Runnable runnable=new Runnable() {
+//            @Override
+//            public void run() {
+//                Bitmap bitmap=getBitmap(url,reqWidth,reqHeight);
+//
+//                if (null!=bitmap){
+//
+//                    LoaderResult loaderResult=new LoaderResult(imageView,bitmap,url,reqWidth,reqHeight);
+//                    handler.obtainMessage(1,loaderResult).sendToTarget();
+//
+//                }
+//            }
+//        };
+//
+//        ThreadPool.execute(runnable);//放入线程池
 
     }
 
@@ -391,26 +424,34 @@ public class ImageLoader{
 
         String file_path=file+"/"+name;
 
+        BitmapFactory.Options options=new BitmapFactory.Options();
 
 
 //        options.inSampleSize=2;
-//        options.inPreferredConfig= Bitmap.Config.RGB_565;
-//
-//
-//        bitmap=BitmapFactory.decodeFile(file_path,options);
+        options.inPreferredConfig= Bitmap.Config.RGB_565;
+
+        options.inJustDecodeBounds=true;
+
+        bitmap=BitmapFactory.decodeFile(file_path,options);
+
+        options.inSampleSize=reSize(options,reqWidth,reqHeight);
+
+        options.inJustDecodeBounds=false;
+
+        bitmap=BitmapFactory.decodeFile(file_path,options);
 
 
         try {
 //            FileInputStream fileInputStream=new FileInputStream(file);
 //            bitmap=BitmapFactory.decodeStream(fileInputStream);
-            bitmap=BitmapFactory.decodeFile(file_path);
+//            bitmap=BitmapFactory.decodeFile(file_path);
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             if (null!=bitmap) {
-                bitmap=Bitmap.createScaledBitmap(bitmap,reqWidth,reqHeight,false);
+//                bitmap=Bitmap.createScaledBitmap(bitmap,reqWidth,reqHeight,false);
 
                 cacheInMemory(bitmap, url);
             }
@@ -448,10 +489,10 @@ public class ImageLoader{
 
         Bitmap bitmap=lruCache.get(name);
 
-        if (bitmap!=null) {
-
-            bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, false);
-        }
+//        if (bitmap!=null) {
+//
+//            bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, false);
+//        }
 
         return bitmap;
     }
