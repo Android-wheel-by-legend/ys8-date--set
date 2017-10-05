@@ -63,49 +63,49 @@ public class CharacterAdapter extends BaseAdapter<CharacterAdapter.ViewHolder>{
 
 //        imageLoader.setRecyclerView(recyclerView);
 
-        this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-                switch (newState){
-                    case 0:
-                        imageLoader.setScroll(false);
-                        notifyDataSetChanged();
-                        break;
-                    case 1:
-                        imageLoader.setScroll(false);
-                        break;
-                    case 2:
-                        imageLoader.setScroll(true);
-                        break;
-                }
-
-
-//                if (newState==0) {
-
+//        this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+////                super.onScrollStateChanged(recyclerView, newState);
+//                switch (newState){
+//                    case 0:
+//                        imageLoader.setScroll(false);
+//                        notifyDataSetChanged();
+//                        break;
+//                    case 1:
+//                        imageLoader.setScroll(false);
+//                        break;
+//                    case 2:
+//                        imageLoader.setScroll(true);
+//                        break;
 //                }
-
-//                observable=Observable
-//                        .create(new ObservableOnSubscribe<Integer>() {
-//                            @Override
-//                            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-//                                e.onNext(newState);
-//                            }
-//                        })
-//                        .distinct()
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread());
-
-
-                Log.d("test->>>>>>>>>>",newState+"");
-
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
+//
+//
+////                if (newState==0) {
+//
+////                }
+//
+////                observable=Observable
+////                        .create(new ObservableOnSubscribe<Integer>() {
+////                            @Override
+////                            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+////                                e.onNext(newState);
+////                            }
+////                        })
+////                        .distinct()
+////                        .subscribeOn(Schedulers.io())
+////                        .observeOn(AndroidSchedulers.mainThread());
+//
+//
+//                Log.d("test->>>>>>>>>>",newState+"");
+//
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//            }
+//        });
     }
 
     public CharacterAdapter() {

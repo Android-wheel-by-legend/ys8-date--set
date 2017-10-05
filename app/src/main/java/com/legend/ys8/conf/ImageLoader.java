@@ -313,9 +313,9 @@ public class ImageLoader{
             return;
         }
 
-        if (isScroll){
-            return;
-        }
+//        if (isScroll){
+//            return;
+//        }
 
         bitmap=getBitmapFromDisk(url,reqWidth,reqHeight);
 
