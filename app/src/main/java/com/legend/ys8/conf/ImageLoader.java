@@ -106,6 +106,54 @@ public class ImageLoader{
 
     }
 
+    //加载本地image
+    public void setImage(int res,ImageView imageView,int reqWidth,int reqHeight){
+
+        bindDrawableImage(res,imageView,reqWidth,reqHeight);
+    }
+
+    //加载drawable里的资源
+    private void bindDrawableImage(int res,ImageView imageView,int reqWidth,int reqHeight){
+        Observable
+                .create(new ObservableOnSubscribe<Bitmap>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
+
+                        imageView.setTag(res);
+
+                        BitmapFactory.Options options=new BitmapFactory.Options();
+
+                        options.inJustDecodeBounds=true;
+
+                        BitmapFactory.decodeResource(YsApplication.getContext().getResources(),res,options);
+
+                        options.inSampleSize=reSize(options,reqWidth,reqHeight);
+
+                        options.inJustDecodeBounds=false;
+
+                        options.inPreferredConfig= Bitmap.Config.RGB_565;
+
+                        Bitmap bitmap=BitmapFactory.decodeResource(YsApplication.getContext().getResources(),res,options);
+
+                        e.onNext(bitmap);
+
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Bitmap>() {
+                    @Override
+                    public void accept(Bitmap bitmap) throws Exception {
+                        if (bitmap!=null&&imageView.getTag().equals(res)){
+                            imageView.setImageBitmap(bitmap);
+                            Log.d("size-------->",res+"<----->"+bitmap.getByteCount()+"");
+                        }
+                    }
+                });
+
+    }
+
+
 
     //清除缓存
     public void clean(){
@@ -150,7 +198,9 @@ public class ImageLoader{
 
         try {
             Response response=call.execute();
-            inputStream=response.body().byteStream();
+
+            inputStream = response.body().byteStream();
+
 
 
 
@@ -166,7 +216,7 @@ public class ImageLoader{
             bitmap=BitmapFactory.decodeStream(inputStream,null,options);
 
 
-            Log.d("internetSize--------->",bitmap.getByteCount()+"");
+//            Log.d("internetSize--------->",bitmap.getByteCount()+"");
 
 
         } catch (IOException e) {
@@ -178,66 +228,6 @@ public class ImageLoader{
 
     }
 
-    //写入本地&返回Bitmap
-    private Bitmap writeToDisk(InputStream inputStream,String url,int reqWidth,int reqHeight){
-
-        if (inputStream==null){
-            return null;
-        }
-
-        Bitmap bitmap=null;
-
-        File filePath=new File(CACHE_PATH).getAbsoluteFile();
-
-        if (!filePath.exists()){
-            filePath.mkdirs();
-        }
-
-        FileOutputStream fileOutputStream=null;
-
-        String name=getMd5(url);
-
-        File image=new File(filePath,name);
-
-        String path=filePath+"/"+name;
-
-        if (null!=image){
-            try {
-                fileOutputStream=new FileOutputStream(image);
-
-                byte[] buffer=new byte[2048];
-
-                int len=0;
-
-                while ((len=inputStream.read(buffer))!=-1){
-                    fileOutputStream.write(buffer,0,len);
-                }
-
-                fileOutputStream.flush();
-
-                bitmap=BitmapFactory.decodeFile(path);
-
-                if (bitmap!=null){
-                    bitmap=Bitmap.createScaledBitmap(bitmap,reqWidth,reqHeight,false);
-                }
-
-
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    inputStream.close();
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return bitmap;
-    }
 
     //真·设置image的地方
     private Handler handler=new Handler(Looper.getMainLooper()){
@@ -301,6 +291,8 @@ public class ImageLoader{
             public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
 
                 Bitmap bitmap=null;
+
+                imageView.setTag(url);
 
                 bitmap=getBitmapFromMemory(url,reqWidth,reqHeight);
 
@@ -420,31 +412,30 @@ public class ImageLoader{
         Bitmap bitmap=null;
         String name=getMd5(url);
 
-        File file=new File(CACHE_PATH).getAbsoluteFile();
 
-        String file_path=file+"/"+name;
-
-        BitmapFactory.Options options=new BitmapFactory.Options();
-
-
-//        options.inSampleSize=2;
-        options.inPreferredConfig= Bitmap.Config.RGB_565;
-
-        options.inJustDecodeBounds=true;
-
-        bitmap=BitmapFactory.decodeFile(file_path,options);
-
-        options.inSampleSize=reSize(options,reqWidth,reqHeight);
-
-        options.inJustDecodeBounds=false;
-
-        bitmap=BitmapFactory.decodeFile(file_path,options);
 
 
         try {
-//            FileInputStream fileInputStream=new FileInputStream(file);
-//            bitmap=BitmapFactory.decodeStream(fileInputStream);
-//            bitmap=BitmapFactory.decodeFile(file_path);
+
+            File file=new File(CACHE_PATH).getAbsoluteFile();
+
+            String file_path=file+"/"+name;
+
+            BitmapFactory.Options options=new BitmapFactory.Options();
+
+
+//        options.inSampleSize=2;
+            options.inPreferredConfig= Bitmap.Config.RGB_565;
+
+            options.inJustDecodeBounds=true;
+
+            bitmap=BitmapFactory.decodeFile(file_path,options);
+
+            options.inSampleSize=reSize(options,reqWidth,reqHeight);
+
+            options.inJustDecodeBounds=false;
+
+            bitmap=BitmapFactory.decodeFile(file_path,options);
 
 
         } catch (Exception e) {
@@ -488,11 +479,7 @@ public class ImageLoader{
 //        System.out.println("url--------->"+url);
 
         Bitmap bitmap=lruCache.get(name);
-
-//        if (bitmap!=null) {
-//
-//            bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, false);
-//        }
+        
 
         return bitmap;
     }
@@ -585,6 +572,8 @@ public class ImageLoader{
                 size *=2;
             }
         }
+
+        Log.d("the size is ------>",size+"");
 
         return size;
     }

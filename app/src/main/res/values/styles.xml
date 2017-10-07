@@ -11,10 +11,12 @@
     <style name="Ys8Theme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
 
-        <item name="android:windowTranslucentStatus"> true </item>
-
-
+        <item name="android:windowTranslucentStatus">true</item>
 
 
     </style>
+
+    <style name="Ys8Theme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Ys8Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

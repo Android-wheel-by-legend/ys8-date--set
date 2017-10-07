@@ -8,7 +8,8 @@
     app:cardCornerRadius="@dimen/radius_space"
     android:layout_marginRight="@dimen/main_default_space"
     android:layout_marginLeft="@dimen/main_default_space"
-    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     >
 
         <LinearLayout

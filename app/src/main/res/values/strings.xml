@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">伊苏8非官方资料集</string>
-    <string name="character">人物</string>
+    <string name="character">人物\nCharacter</string>
+    <string name="world">世界\nWorld</string>
+    <string name="music">音乐\nMusic</string>
+    <string name="movie">视频\nMovie</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

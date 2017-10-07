@@ -23,4 +23,9 @@
     <color name="colorSliver">#dbe1db</color>
     <color name="colorWhite">#FFFFFF</color>
 
+    <color name="colorAlpha">#5ac0ff</color>
+    <color name="colorAlpha2">#00FFFFFF</color>
+
+    <color name="colorItem">#FF3adaca</color>
+
 </resources>

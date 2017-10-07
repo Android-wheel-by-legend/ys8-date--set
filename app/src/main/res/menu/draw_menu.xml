@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item android:id="@+id/setting"
+            android:title="设置"
+            android:icon="@drawable/ic_settings_black_24dp"
+            />
+
+        <item android:id="@+id/about_me"
+            android:title="关于作者"
+            android:icon="@drawable/ic_whatshot_black_24dp"
+            />
+
+        <item android:id="@+id/about_app"
+            android:title="关于本APP"
+            android:icon="@drawable/ic_phone_android_black_24dp"
+            />
+
+    </group>
+
+    <item android:title="其他">
+
+    <menu>
+
+        <item
+            android:id="@+id/clean"
+            android:title="清理缓存"
+            android:icon="@drawable/ic_hourglass_full_black_24dp"
+            />
+
+        <item android:id="@+id/update"
+            android:title="版本更新"
+            android:icon="@drawable/ic_data_usage_black_24dp"
+            />
+
+        <item android:id="@+id/exit"
+            android:title="退出"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+
+            />
+    </menu>
+    </item>
+
+</menu>

@@ -1,9 +1,11 @@
 package com.legend.ys8.adaper;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,10 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder>{
 
     ArrayList<String> strings;
 
+    int width=0;
+    int height=0;
+
+
     public MainAdapter() {
     }
 
@@ -39,11 +45,26 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder>{
 
         final ViewHolder viewHolder=new ViewHolder(view);
 
+        width=YsApplication.getContext().getResources().getDisplayMetrics().widthPixels;
 
-        viewHolder.view.setOnClickListener(event-> {
-                EventBus.getDefault().post(new MainEvent(viewHolder.main_item_text.getText().toString()));
-        }
+        height= (int) (0.4*width);
 
+        ViewGroup.LayoutParams layoutParams= viewHolder.view.getLayoutParams();
+
+        layoutParams.height=height;
+
+        viewHolder.view.setLayoutParams(layoutParams);
+
+        LinearLayout.LayoutParams layoutParams1= (LinearLayout.LayoutParams) viewHolder.main_item_image.getLayoutParams();
+
+        layoutParams1.height=height;
+        layoutParams1.width=height;
+
+        viewHolder.main_item_image.setLayoutParams(layoutParams1);
+
+
+        viewHolder.view.setOnClickListener(event->
+                EventBus.getDefault().post(new MainEvent(viewHolder.main_item_text.getText().toString()))
         );
 
         return viewHolder;
@@ -55,6 +76,32 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder>{
         String string=strings.get(position);
         holder.main_item_text.setText(string);
 
+        if (string.startsWith("人物")){
+            imageLoader.setImage(R.drawable.character,holder.main_item_image,height,height);
+        }else if (string.startsWith("世界")){
+            imageLoader.setImage(R.drawable.world,holder.main_item_image,height,height);
+        }else if (string.startsWith("音乐")){
+            imageLoader.setImage(R.drawable.music,holder.main_item_image,height,height);
+        }else if (string.startsWith("视频")){
+            imageLoader.setImage(R.drawable.movie,holder.main_item_image,height,height);
+        }
+
+//        height=YsApplication.getContext().getResources().getDimensionPixelSize(R.dimen.main_height);
+
+//        switch (string){
+//            case "人物":
+//                imageLoader.setImage(R.drawable.character,holder.main_item_image,height,height);
+//                break;
+//            case "世界":
+//                imageLoader.setImage(R.drawable.world,holder.main_item_image,height,height);
+//                break;
+//            case "音乐":
+//                imageLoader.setImage(R.drawable.music,holder.main_item_image,height,height);
+//                break;
+//            case "视频":
+//                imageLoader.setImage(R.drawable.movie,holder.main_item_image,height,height);
+//                break;
+//        }
 
     }
 
