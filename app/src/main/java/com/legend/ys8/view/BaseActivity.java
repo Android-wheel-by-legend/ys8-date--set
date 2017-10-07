@@ -28,13 +28,5 @@ public class BaseActivity extends AppCompatActivity {
         return findViewById(id);
     }
 
-    protected void openFragment(Fragment fragment){
-        FragmentManager fragmentManager=getSupportFragmentManager();
-        FragmentTransaction transaction=fragmentManager.beginTransaction();
-        transaction.add(R.id.character_detail,fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
 
 }

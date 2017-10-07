@@ -19,13 +19,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.CharacterActivity"></activity>
-        <activity android:name=".view.BaseActivity"></activity>
-        <activity android:name=".view.CharacterInfoActivity"></activity>
+        <activity android:name=".view.CharacterActivity" />
+        <activity android:name=".view.BaseActivity" />
+        <activity android:name=".view.CharacterInfoActivity" />
         <activity
             android:name=".view.Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/Ys8Theme"></activity>
+            android:theme="@style/Ys8Theme" />
+        <activity android:name=".view.MusicActivity"></activity>
     </application>
 
 </manifest>

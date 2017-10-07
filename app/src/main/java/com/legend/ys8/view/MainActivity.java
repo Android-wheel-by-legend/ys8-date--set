@@ -199,22 +199,15 @@ public class MainActivity extends BaseActivity {
         }else if (item.startsWith("世界")){
 
         }else if (item.startsWith("音乐")){
+            Intent intent=new Intent(MainActivity.this,MusicActivity.class);
+
+            startActivity(intent);
+
 
         }else if (item.startsWith("视频")){
 
         }
 
-        switch (item){
-            case "人物 Character":
-                Intent intent=new Intent(MainActivity.this,CharacterActivity.class);
-                startActivity(intent);
-                break;
-            case "音乐 Music":
-
-                break;
-
-
-        }
     }
 
 
